@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - '6379:6379'
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    command: ['redis-server', '--requirepass', '${REDIS_PASSWORD}']
+    volumes:
+      - redis-data:/data
+    networks:
+      - redis-net
+    restart: always
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest # Correct image name
+    container_name: redis-commander
+    ports:
+      - '8081:8081'
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks:
+      - redis-net
+    depends_on:
+      - redis
+    restart: always
+
+volumes:
+  redis-data:
+
+networks:
+  redis-net:
+    driver: bridge
