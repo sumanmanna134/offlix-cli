@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: offlix
-Version: 0.1.5.1
+Version: 0.1.5.2
 Summary: Offlix is a command-line tool designed to simplify the deployment and management of common services using Docker Compose. With Offlix, you can easily install, uninstall, and retrieve environment variables for services like MySQL, MongoDB, Kafka, Maildev, and PostgreSQL, etc
 Home-page: https://github.com/sumanmanna134/offlix-cli
 Author: Suman Manna
