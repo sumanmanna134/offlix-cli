@@ -1,0 +1,44 @@
+version: '3.7'
+
+services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault-prod-raft
+    
+    # ⚠️ Security Note: In a real production environment, this listener must be configured
+    # to use TLS (HTTPS) with proper certificates.
+    ports:
+      - "8200:8200"
+      
+    volumes:
+      # 1. Configuration volume (for the HCL file)
+      - ./config:/vault/config
+      # 2. Data volume (for Raft storage and logs)
+      - vault_data:/vault/data
+      
+    environment:
+      # The advertised address Vault will tell clients to use
+      - VAULT_ADDR=http://127.0.0.1:8200
+      
+    # Required for Vault's Integrated Storage (Raft)
+    cap_add:
+      - IPC_LOCK
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+      
+    # Basic resource limits for stability
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          
+    # Start the server using the configuration file
+    command: ["/vault/config/entrypoint.sh"]
+    
+# Define the persistent volume
+volumes:
+  vault_data:
+    driver: local
